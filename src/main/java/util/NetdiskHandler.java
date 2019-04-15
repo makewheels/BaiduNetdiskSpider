@@ -62,14 +62,14 @@ public class NetdiskHandler {
 	/**
 	 * 重命名文件，支持可变参数，可重命名单个或多个文件
 	 * 
-	 * @param renameInfos 重命名的信息：有路径，和新的文件名
+	 * @param renameInfo 重命名的信息：有路径，和新的文件名
 	 * @return 重命名之后给的返回json
 	 */
-	public static RenameResponse rename(RenameInfo... renameInfos) {
+	public static RenameResponse rename(RenameInfo renameInfo) {
 		String url = "https://pan.baidu.com/api/filemanager?opera=rename&bdstoken=" + Run.bdstoken;
 		String params = null;
 		try {
-			params = "filelist=" + URLEncoder.encode(JSON.toJSONString(renameInfos), Constants.CHARSET);
+			params = "filelist=" + URLEncoder.encode("[" + JSON.toJSONString(renameInfo) + "]", Constants.CHARSET);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

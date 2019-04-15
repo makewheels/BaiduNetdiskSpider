@@ -1,5 +1,6 @@
 package run;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -15,9 +16,9 @@ public class Run {
 	// bdstoken
 	public static String bdstoken = "b87dfb127ada05e71b91016127111242";
 	// 浏览器地址栏的网址
-	private String browserPath = "https://pan.baidu.com/disk/home?#/all?vmode=list&path=%2FPostgradute%2FTest";
+	private String browserPath = "https://pan.baidu.com/disk/home?#/all?vmode=list&path=%2FPostgradute%2F%E6%95%B0%E5%AD%A6%20Math%2F%E6%B1%A4%E5%AE%B6%E5%87%A4%2F%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6%20%E5%9F%BA%E7%A1%80%E7%8F%AD%2F%E9%AB%98%E6%95%B0";
 	// 要删除文件的，文件名的内容
-	private String[] contentArray = { "新建文本文档" };
+	private String[] contentArray = { "【微信公众号：【考研仓库】免费分享】" };
 	// 要删除文件的拓展名
 	private String[] extensionArray = null;
 
@@ -26,9 +27,13 @@ public class Run {
 	 */
 	@Test
 	public void rename() {
+		// 路径
 		String dir = browserPath.substring(browserPath.indexOf("path=") + 5);
+		// 拿到文件列表
 		List<EachFile> fileList = NetdiskHandler.getFileList(dir);
-		RenameInfo[] renameInfos = new RenameInfo[fileList.size()];
+		// 重命名信息列表
+		List<RenameInfo> renameInfos = new ArrayList<>();
+		// 装载重命名信息
 		for (int i = 0; i < fileList.size(); i++) {
 			EachFile eachFile = fileList.get(i);
 			RenameInfo renameInfo = new RenameInfo();
@@ -39,13 +44,20 @@ public class Run {
 				continue;
 			}
 			renameInfo.setNewname(newName);
-			renameInfos[i] = renameInfo;
+			renameInfos.add(renameInfo);
 		}
-		RenameResponse renameResponse = NetdiskHandler.rename(renameInfos);
-		System.out.println("root Errno:" + renameResponse.getErrno());
-		List<Info> info = renameResponse.getInfo();
-		for (Info each : info) {
-			System.out.println(each);
+		// 批量重命名
+		for (RenameInfo renameInfo : renameInfos) {
+			RenameResponse renameResponse = NetdiskHandler.rename(renameInfo);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			List<Info> info = renameResponse.getInfo();
+			for (Info each : info) {
+				System.out.println(each);
+			}
 		}
 	}
 

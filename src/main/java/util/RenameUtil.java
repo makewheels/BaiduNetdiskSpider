@@ -17,6 +17,7 @@ public class RenameUtil {
 	 * @return 如果不符合要求，则返回null
 	 */
 	public static String getNewName(String oldName, String[] contentArray, String[] extensionArray) {
+		// 检验拓展名
 		if (extensionArray != null) {
 			for (String extension : extensionArray) {
 				if (oldName.endsWith(extension) == false) {
@@ -24,6 +25,19 @@ public class RenameUtil {
 				}
 			}
 		}
+		// 检验文件名，是否需要重命名
+		boolean needRename = false;
+		for (String content : contentArray) {
+			if (oldName.contains(content)) {
+				needRename = true;
+				break;
+			}
+		}
+		// 如果不需要重命名
+		if (needRename == false) {
+			return null;
+		}
+		// 删除文件名中要删除的内容
 		for (String content : contentArray) {
 			oldName = oldName.replace(content, "");
 		}
