@@ -108,7 +108,7 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String get(String url, Map<String, String> headerMap) {
-		System.out.println("HttpClient GET (header): " + url);
+//		System.out.println("HttpClient GET (header): " + url);
 		CloseableHttpClient client = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet();
 		Set<String> keySet = headerMap.keySet();

@@ -16,7 +16,6 @@ import bean.filelist.EachFile;
 import bean.filelist.FileListResponse;
 import bean.rename.RenameInfo;
 import bean.rename.response.RenameResponse;
-import run.Run;
 
 /**
  * 网盘工具类
@@ -52,8 +51,26 @@ public class NetdiskHandler {
 	 * @param dir 经过urlEncode的dir，例如：/Postgradute/数学 Math/汤家凤/高等数学 基础班/高数
 	 * @return
 	 */
-	public static List<EachFile> getFileList(String dir) {
+	public static List<EachFile> getFileListUrlEncoded(String dir) {
 		String url = "https://pan.baidu.com/api/list?dir=" + dir;
+		String json = HttpUtil.get(url, headerMap);
+		FileListResponse fileListResponse = JSON.parseObject(json, FileListResponse.class);
+		return fileListResponse.getList();
+	}
+
+	/**
+	 * 返回指定路径的网盘文件列表
+	 * 
+	 * @param dir /Postgradute/数学 Math/汤家凤/高等数学 基础班/高数
+	 * @return
+	 */
+	public static List<EachFile> getFileList(String dir) {
+		String url = null;
+		try {
+			url = "https://pan.baidu.com/api/list?dir=" + URLEncoder.encode(dir, Constants.CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		String json = HttpUtil.get(url, headerMap);
 		FileListResponse fileListResponse = JSON.parseObject(json, FileListResponse.class);
 		return fileListResponse.getList();
@@ -66,7 +83,7 @@ public class NetdiskHandler {
 	 * @return 重命名之后给的返回json
 	 */
 	public static RenameResponse rename(RenameInfo renameInfo) {
-		String url = "https://pan.baidu.com/api/filemanager?opera=rename&bdstoken=" + Run.bdstoken;
+		String url = "https://pan.baidu.com/api/filemanager?opera=rename&bdstoken=" + Config.BDSTOKEN;
 		String params = null;
 		try {
 			params = "filelist=" + URLEncoder.encode("[" + JSON.toJSONString(renameInfo) + "]", Constants.CHARSET);
