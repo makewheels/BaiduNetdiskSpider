@@ -1,4 +1,4 @@
-package run.rename;
+package util;
 
 /**
  * 重命名工具类
